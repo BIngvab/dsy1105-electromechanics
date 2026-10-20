@@ -1,16 +1,22 @@
 package com.dominguezdiaz.electrotrack.ui.navigation
 
+
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHost
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.dominguezdiaz.electrotrack.ui.screen.InicioSesion
+import com.dominguezdiaz.electrotrack.ui.screen.MenuUsuario
+import com.dominguezdiaz.electrotrack.ui.screen.MenuAdministrador
 import androidx.navigation.compose.composable
+
 
 
 
 object Routes {
     const val LOGIN = "login"
+    const val USUARIO = "usuario"
+    const val ADMINISTRADOR = "administrador"
 
 }
 
@@ -24,8 +30,23 @@ fun AppNavigation() {
 
     ) {
         composable(Routes.LOGIN) {
-            InicioSesion()
+            InicioSesion(
+                onLoginSuccess = {
+                    navController.navigate(Routes.USUARIO)
+                }
+            )
 
         }
+
+
+        composable (Routes.USUARIO) {
+            MenuUsuario()
+        }
+
+
+        composable (Routes.ADMINISTRADOR) {
+            MenuAdministrador()
+        }
+
     }
 }

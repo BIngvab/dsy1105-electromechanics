@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.material3.Button
 
 @Composable
-fun InicioSesion() {
+fun InicioSesion(onLoginSuccess: () -> Unit) {
 
     var rut by remember { mutableStateOf("") }
     var contrasena by remember { mutableStateOf("") }
@@ -83,8 +83,11 @@ fun InicioSesion() {
             onClick = {
                 if (rut == "99.999.999-9" && contrasena == "42368") {
                     mensaje = "Inicio de sesión exitoso"
+                    onLoginSuccess()
+
                 } else {
                     mensaje = "Inicio de sesion fallido, por favor revise su rut y contraseña"
+
                 }
             },
             modifier = Modifier.fillMaxWidth()
@@ -94,7 +97,9 @@ fun InicioSesion() {
 
         }
 
+
         Spacer(modifier = Modifier.height(12.dp))
+
 
         Text(
             text = mensaje,
@@ -105,7 +110,9 @@ fun InicioSesion() {
 
         )
 
+
         Spacer(modifier = Modifier.height(20.dp))
+
 
         Text("Datos de Prueba: ")
         Text("rut: 99.999.999-9")
