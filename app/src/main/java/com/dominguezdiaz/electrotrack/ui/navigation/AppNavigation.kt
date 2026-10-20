@@ -7,7 +7,9 @@ import androidx.navigation.compose.rememberNavController
 import com.dominguezdiaz.electrotrack.ui.screen.InicioSesion
 import com.dominguezdiaz.electrotrack.ui.screen.MenuUsuario
 import com.dominguezdiaz.electrotrack.ui.screen.MenuAdministrador
+import com.dominguezdiaz.electrotrack.ui.screen.RegistrarAsistencia
 import androidx.navigation.compose.composable
+
 
 
 
@@ -16,6 +18,8 @@ object Routes {
     const val LOGIN = "login"
     const val USUARIO = "usuario"
     const val ADMINISTRADOR = "administrador"
+
+    const val ASISTENCIA = "asistencia"
 
 }
 
@@ -51,6 +55,16 @@ fun AppNavigation() {
         }
 
 
+        composable (Routes.ASISTENCIA) {
+            RegistrarAsistencia (
+                onVolver = {
+                    navController.popBackStack()
+
+                }
+            )
+        }
+
+
         composable (Routes.USUARIO) {
             MenuUsuario(
                 onCerrarSesion = {
@@ -62,6 +76,9 @@ fun AppNavigation() {
                         launchSingleTop = true
 
                     }
+                },
+                onRegistrarAsistencia = {
+                    navController.navigate(Routes.ASISTENCIA)
                 }
             )
         }
@@ -81,11 +98,5 @@ fun AppNavigation() {
                 }
             )
         }
-
-
-
-
-
-
     }
 }

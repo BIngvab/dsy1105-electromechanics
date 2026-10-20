@@ -16,7 +16,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun MenuUsuario(onCerrarSesion: () -> Unit) {
+fun MenuUsuario(
+    onCerrarSesion: () -> Unit,
+    onRegistrarAsistencia: () -> Unit
+
+) {
 
     Column(
         modifier = Modifier
@@ -42,7 +46,7 @@ fun MenuUsuario(onCerrarSesion: () -> Unit) {
 
 
         Button(
-            onClick = { },
+            onClick = {onRegistrarAsistencia()},
             modifier = Modifier.fillMaxWidth()
 
         ) {

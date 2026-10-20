@@ -95,7 +95,7 @@ fun InicioSesion(
                     onLoginSuccess(resultado)
 
                 } else {
-                    mensaje = "Inicio de sesion fallido, por favor revise su rut y contraseña"
+                    mensaje = "Inicio de sesion fallido.\n por favor revise su rut y contraseña"
 
                 }
             },
