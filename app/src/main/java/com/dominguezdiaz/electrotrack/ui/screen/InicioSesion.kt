@@ -20,9 +20,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.Button
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.dominguezdiaz.electrotrack.ui.viewmodel.LoginViewModel
 
 @Composable
-fun InicioSesion(onLoginSuccess: () -> Unit) {
+fun InicioSesion(
+    onLoginSuccess: (String) -> Unit,
+    loginViewModel: LoginViewModel = viewModel()
+) {
 
     var rut by remember { mutableStateOf("") }
     var contrasena by remember { mutableStateOf("") }
@@ -81,9 +86,12 @@ fun InicioSesion(onLoginSuccess: () -> Unit) {
 
         Button (
             onClick = {
-                if (rut == "99.999.999-9" && contrasena == "42368") {
+
+                val resultado = loginViewModel.validarLogin(rut, contrasena)
+
+                if (resultado == "USUARIO" || resultado == "ADMINISTRADOR") {
                     mensaje = "Inicio de sesión exitoso"
-                    onLoginSuccess()
+                    onLoginSuccess(resultado)
 
                 } else {
                     mensaje = "Inicio de sesion fallido, por favor revise su rut y contraseña"

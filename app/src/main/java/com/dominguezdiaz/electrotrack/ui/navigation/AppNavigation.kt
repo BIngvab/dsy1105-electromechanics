@@ -2,7 +2,6 @@ package com.dominguezdiaz.electrotrack.ui.navigation
 
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavHost
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.dominguezdiaz.electrotrack.ui.screen.InicioSesion
@@ -31,11 +30,23 @@ fun AppNavigation() {
     ) {
         composable(Routes.LOGIN) {
             InicioSesion(
-                onLoginSuccess = {
-                    navController.navigate(Routes.USUARIO)
+                onLoginSuccess = { rol ->
+                    if (rol == "USUARIO") {
+                        navController.navigate(Routes.USUARIO){
+                            popUpTo(Routes.LOGIN) {
+                                inclusive = true
+
+                            }
+                        }
+                    } else if (rol == "ADMINISTRADOR") {
+                        navController.navigate(Routes.ADMINISTRADOR) {
+                            popUpTo(Routes.LOGIN) {
+                                inclusive = true
+                            }
+                        }
+                    }
                 }
             )
-
         }
 
 
@@ -43,10 +54,12 @@ fun AppNavigation() {
             MenuUsuario()
         }
 
-
-        composable (Routes.ADMINISTRADOR) {
+        composable(Routes.ADMINISTRADOR) {
             MenuAdministrador()
         }
+
+
+
 
     }
 }
