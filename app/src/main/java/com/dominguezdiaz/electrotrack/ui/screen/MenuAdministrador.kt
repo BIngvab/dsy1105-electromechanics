@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun MenuAdministrador() {
+fun MenuAdministrador(onCerrarSesion: () -> Unit) {
 
     Column(
         modifier = Modifier
@@ -47,6 +47,7 @@ fun MenuAdministrador() {
 
         ) {
             Text("Revisar asistencias")
+
         }
 
 
@@ -59,6 +60,7 @@ fun MenuAdministrador() {
 
         ) {
             Text("Asignar trabajos")
+
         }
 
 
@@ -71,6 +73,7 @@ fun MenuAdministrador() {
 
         ) {
             Text("Revisar informes")
+
         }
 
 
@@ -83,6 +86,7 @@ fun MenuAdministrador() {
 
         ) {
             Text("Gestionar estados de trabajos")
+
         }
 
 
@@ -90,11 +94,12 @@ fun MenuAdministrador() {
 
 
         Button(
-            onClick = { },
+            onClick = {onCerrarSesion()},
             modifier = Modifier.fillMaxWidth()
 
         ) {
             Text("Cerrar sesión")
+
         }
 
 

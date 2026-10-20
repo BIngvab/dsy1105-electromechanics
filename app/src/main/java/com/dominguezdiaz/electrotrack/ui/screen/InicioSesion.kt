@@ -27,6 +27,7 @@ import com.dominguezdiaz.electrotrack.ui.viewmodel.LoginViewModel
 fun InicioSesion(
     onLoginSuccess: (String) -> Unit,
     loginViewModel: LoginViewModel = viewModel()
+
 ) {
 
     var rut by remember { mutableStateOf("") }

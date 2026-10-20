@@ -42,6 +42,7 @@ fun AppNavigation() {
                         navController.navigate(Routes.ADMINISTRADOR) {
                             popUpTo(Routes.LOGIN) {
                                 inclusive = true
+
                             }
                         }
                     }
@@ -51,12 +52,37 @@ fun AppNavigation() {
 
 
         composable (Routes.USUARIO) {
-            MenuUsuario()
+            MenuUsuario(
+                onCerrarSesion = {
+                    navController.navigate(Routes.LOGIN) {
+                        popUpTo(Routes.USUARIO) {
+                            inclusive = true
+
+                        }
+                        launchSingleTop = true
+
+                    }
+                }
+            )
         }
 
-        composable(Routes.ADMINISTRADOR) {
-            MenuAdministrador()
+
+        composable (Routes.ADMINISTRADOR) {
+            MenuAdministrador (
+                onCerrarSesion = {
+                    navController.navigate(Routes.LOGIN) {
+                        popUpTo(Routes.ADMINISTRADOR) {
+                            inclusive = true
+
+                        }
+                        launchSingleTop = true
+
+                    }
+                }
+            )
         }
+
+
 
 
 

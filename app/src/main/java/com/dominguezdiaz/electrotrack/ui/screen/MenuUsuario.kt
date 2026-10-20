@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun MenuUsuario() {
+fun MenuUsuario(onCerrarSesion: () -> Unit) {
 
     Column(
         modifier = Modifier
@@ -24,11 +24,13 @@ fun MenuUsuario() {
             .padding(24.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
+
     ) {
 
         Text(
             text = "ElectroTrack",
             style = MaterialTheme.typography.headlineLarge
+
         )
 
 
@@ -42,8 +44,10 @@ fun MenuUsuario() {
         Button(
             onClick = { },
             modifier = Modifier.fillMaxWidth()
+
         ) {
             Text("Registrar asistencia")
+
         }
 
 
@@ -52,8 +56,10 @@ fun MenuUsuario() {
         Button(
             onClick = { },
             modifier = Modifier.fillMaxWidth()
+
         ) {
             Text("Mis trabajos asignados")
+
         }
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -61,17 +67,21 @@ fun MenuUsuario() {
         Button(
             onClick = { },
             modifier = Modifier.fillMaxWidth()
+
         ) {
             Text("Informes de mantenimiento")
+
         }
 
         Spacer(modifier = Modifier.height(12.dp))
 
         Button(
-            onClick = { },
+            onClick = {onCerrarSesion()},
             modifier = Modifier.fillMaxWidth()
+
         ) {
             Text("Cerrar sesión")
+
         }
 
 
