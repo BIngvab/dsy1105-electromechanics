@@ -209,6 +209,7 @@ fun RegistrarAsistencia(onVolver: () -> Unit) {
 
                 }
             )
+        }
 
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -254,4 +255,3 @@ fun RegistrarAsistencia(onVolver: () -> Unit) {
             }
         }
     }
-}
