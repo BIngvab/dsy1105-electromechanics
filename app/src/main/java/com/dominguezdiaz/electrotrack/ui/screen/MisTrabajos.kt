@@ -31,10 +31,15 @@ fun MisTrabajos(
     val trabajos by trabajoViewModel.trabajos.collectAsState()
 
 
+
     LaunchedEffect(Unit) {
-        trabajoViewModel.obtenerTrabajos()
+
+        trabajoViewModel.obtenerTrabajosPorTrabajador(
+            "99.999.999-9"
+        )
 
     }
+
 
 
     Column(
