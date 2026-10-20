@@ -26,25 +26,32 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 
 import java.time.LocalDateTime
+import java.util.Locale
 import java.time.format.DateTimeFormatter
 import android.location.LocationManager
 import android.content.Context
 import android.os.Build
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.dominguezdiaz.electrotrack.ui.viewmodel.AsistenciaViewModel
 
 
 @Composable
-fun RegistrarAsistencia(onVolver: () -> Unit) {
-    val fechaHoraActual = LocalDateTime.now()
-    val formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
-    val fechaHoraFormateada = fechaHoraActual.format(formato)
+fun RegistrarAsistencia(
+    onVolver: () -> Unit,
+    asistenciaViewModel: AsistenciaViewModel = viewModel()
+
+) {
     val context = LocalContext.current
+    val formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
 
-
-    var ubicacion by remember {
-        mutableStateOf("Pendiente")
+    var ubicacion by remember { mutableStateOf("Pendiente") }
+    var latitud by remember { mutableStateOf<Double?>(null) }
+    var longitud by remember { mutableStateOf<Double?>(null) }
+    var mensaje by remember { mutableStateOf("") }
+    var fechaHoraMostrada by remember {
+        mutableStateOf(LocalDateTime.now().format(formato))
 
     }
-
 
     var permisoUbicacion by remember {
         mutableStateOf(
@@ -56,16 +63,24 @@ fun RegistrarAsistencia(onVolver: () -> Unit) {
         )
     }
 
-
     val solicitarPermiso = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
-
     ) { permisoConcedido ->
         permisoUbicacion = permisoConcedido
+        if (!permisoConcedido) {
+            mensaje = "Debes permitir el permiso de ubicación para registrar la asistencia."
 
+        }
     }
 
+
     fun obtenerUbicacion() {
+        latitud = null
+        longitud = null
+        ubicacion = "Buscando ubicación..."
+        mensaje = ""
+
+
         val locationManager = context.getSystemService(
             Context.LOCATION_SERVICE
 
@@ -86,73 +101,107 @@ fun RegistrarAsistencia(onVolver: () -> Unit) {
         ) == PackageManager.PERMISSION_GRANTED
 
 
-        if (permisoPreciso || permisoAproximado) {
-            try {
-                val proveedor = if (
-                    permisoPreciso &&
-                    locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        if (!permisoPreciso && !permisoAproximado) {
+            ubicacion = "Permiso de ubicación no concedido."
+            return
 
-                ) {
-                    LocationManager.GPS_PROVIDER
+        }
+        try {
+            val proveedor = if (
+                permisoPreciso &&
+                locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
 
-                } else if (
-                    locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+            ) {
+                LocationManager.GPS_PROVIDER
 
-                ) {
-                    LocationManager.NETWORK_PROVIDER
+            } else if (
+                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
 
-                } else {
-                    ubicacion = "Activa la ubicación del dispositivo."
-                    return
+            ) {
+                LocationManager.NETWORK_PROVIDER
 
-                }
+            } else {
+                ubicacion = "Activa la ubicación del dispositivo."
+                return
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            }
 
-                    locationManager.getCurrentLocation(
-                        proveedor,
-                        null,
-                        ContextCompat.getMainExecutor(context)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
 
-                    ) { location ->
-                        if (location != null) {
-                            ubicacion = "Latitud: %.6f\nLongitud: %.6f".format(
-                                java.util.Locale.US,
-                                location.latitude,
-                                location.longitude
+                locationManager.getCurrentLocation(
+                    proveedor,
+                    null,
+                    ContextCompat.getMainExecutor(context)
 
-                            ) } else {
-                            ubicacion = "No se pudo obtener la ubicación"
-
-                        }
-                    }
-                } else {
-                    val location = locationManager.getLastKnownLocation(proveedor)
-
+                ) { location ->
                     if (location != null) {
+                        latitud = location.latitude
+                        longitud = location.longitude
                         ubicacion = "Latitud: %.6f\nLongitud: %.6f".format(
                             java.util.Locale.US,
                             location.latitude,
                             location.longitude
 
                         )
-
                     } else {
-                        ubicacion = "No hay una ubicación disponible."
+                        ubicacion = "No se pudo obtener la ubicación"
 
                     }
                 }
-            }  catch (e: SecurityException) {
-                ubicacion = "Permiso de ubicación no concedido."
+            } else {
+                val location = locationManager.getLastKnownLocation(proveedor)
 
-            }   catch (e: Exception) {
-                ubicacion = "Error al obtener la ubicación."
+                if (location != null) {
+                    latitud = location.latitude
+                    longitud = location.longitude
+                    ubicacion = "Latitud: %.6f\nLongitud: %.6f".format(
+                        java.util.Locale.US,
+                        location.latitude,
+                        location.longitude
 
+                    )
+
+                } else {
+                    ubicacion = "No hay una ubicación disponible."
+
+                }
             }
-        } else {
+        } catch (e: SecurityException) {
             ubicacion = "Permiso de ubicación no concedido."
 
+        } catch (e: Exception) {
+            ubicacion = "Error al obtener la ubicación."
+
         }
+    }
+
+
+    fun guardarAsistencia(tipo: String) {
+        val lat = latitud
+        val lon = longitud
+
+
+        if (lat == null || lon == null) {
+            mensaje = "Primero debes obtener tu ubicación."
+            return
+
+        }
+
+
+        val fechaHora = LocalDateTime.now().format(formato)
+
+
+        asistenciaViewModel.registrarAsistencia(
+            tipo = tipo,
+            fechaHora = fechaHora,
+            latitud = lat,
+            longitud = lon
+
+        )
+
+        fechaHoraMostrada = fechaHora
+        mensaje = "Registro de $tipo solicitado."
+
     }
 
 
@@ -214,13 +263,13 @@ fun RegistrarAsistencia(onVolver: () -> Unit) {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            Text("Fecha y hora: $fechaHoraFormateada")
+            Text("Fecha y hora: $fechaHoraMostrada")
 
             Spacer(modifier = Modifier.height(24.dp))
 
 
             Button(
-                onClick = {},
+                onClick = {guardarAsistencia("ENTRADA")},
                 modifier = Modifier.fillMaxWidth()
 
             ) {
@@ -233,11 +282,18 @@ fun RegistrarAsistencia(onVolver: () -> Unit) {
 
 
             Button(
-                onClick = {},
+                onClick = {guardarAsistencia("SALIDA")},
                 modifier = Modifier.fillMaxWidth()
 
             ) {
                 Text("Registrar salida.")
+
+            }
+
+
+            if (mensaje.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(mensaje)
 
             }
 
