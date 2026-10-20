@@ -1,3 +1,4 @@
+
 package com.dominguezdiaz.electrotrack.ui.screen
 
 import androidx.compose.foundation.layout.Arrangement
@@ -16,7 +17,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun MenuAdministrador(onCerrarSesion: () -> Unit) {
+fun MenuAdministrador(
+    onCerrarSesion: () -> Unit,
+    onRevisarAsistencias: () -> Unit
+
+) {
 
     Column(
         modifier = Modifier
@@ -33,16 +38,14 @@ fun MenuAdministrador(onCerrarSesion: () -> Unit) {
 
         )
 
-
         Spacer(modifier = Modifier.height(8.dp))
 
         Text("Menu de Administrador")
 
         Spacer(modifier = Modifier.height(24.dp))
 
-
         Button(
-            onClick = { },
+            onClick = { onRevisarAsistencias() },
             modifier = Modifier.fillMaxWidth()
 
         ) {
@@ -50,9 +53,7 @@ fun MenuAdministrador(onCerrarSesion: () -> Unit) {
 
         }
 
-
         Spacer(modifier = Modifier.height(12.dp))
-
 
         Button(
             onClick = { },
@@ -63,9 +64,7 @@ fun MenuAdministrador(onCerrarSesion: () -> Unit) {
 
         }
 
-
         Spacer(modifier = Modifier.height(12.dp))
-
 
         Button(
             onClick = { },
@@ -76,9 +75,7 @@ fun MenuAdministrador(onCerrarSesion: () -> Unit) {
 
         }
 
-
         Spacer(modifier = Modifier.height(12.dp))
-
 
         Button(
             onClick = { },
@@ -89,12 +86,10 @@ fun MenuAdministrador(onCerrarSesion: () -> Unit) {
 
         }
 
-
         Spacer(modifier = Modifier.height(12.dp))
 
-
         Button(
-            onClick = {onCerrarSesion()},
+            onClick = { onCerrarSesion() },
             modifier = Modifier.fillMaxWidth()
 
         ) {
@@ -102,6 +97,6 @@ fun MenuAdministrador(onCerrarSesion: () -> Unit) {
 
         }
 
-
     }
+
 }
