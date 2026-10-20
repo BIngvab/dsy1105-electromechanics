@@ -1,5 +1,4 @@
 package com.dominguezdiaz.electrotrack.ui.screen
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -21,7 +20,6 @@ fun MenuUsuario(
     onRegistrarAsistencia: () -> Unit
 
 ) {
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -30,7 +28,6 @@ fun MenuUsuario(
         horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
-
         Text(
             text = "ElectroTrack",
             style = MaterialTheme.typography.headlineLarge
@@ -57,6 +54,7 @@ fun MenuUsuario(
 
         Spacer(modifier = Modifier.height(12.dp))
 
+
         Button(
             onClick = { },
             modifier = Modifier.fillMaxWidth()
@@ -66,7 +64,9 @@ fun MenuUsuario(
 
         }
 
+
         Spacer(modifier = Modifier.height(12.dp))
+
 
         Button(
             onClick = { },
@@ -77,7 +77,9 @@ fun MenuUsuario(
 
         }
 
+
         Spacer(modifier = Modifier.height(12.dp))
+
 
         Button(
             onClick = {onCerrarSesion()},

@@ -1,5 +1,4 @@
 package com.dominguezdiaz.electrotrack.ui.screen
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -24,7 +23,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
-
 import java.time.LocalDateTime
 import java.util.Locale
 import java.time.format.DateTimeFormatter
@@ -44,14 +42,18 @@ fun RegistrarAsistencia(
     val context = LocalContext.current
     val formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
 
+
     var ubicacion by remember { mutableStateOf("Pendiente") }
     var latitud by remember { mutableStateOf<Double?>(null) }
     var longitud by remember { mutableStateOf<Double?>(null) }
     var mensaje by remember { mutableStateOf("") }
+
+
     var fechaHoraMostrada by remember {
         mutableStateOf(LocalDateTime.now().format(formato))
 
     }
+
 
     var permisoUbicacion by remember {
         mutableStateOf(
@@ -62,6 +64,7 @@ fun RegistrarAsistencia(
             ) == PackageManager.PERMISSION_GRANTED
         )
     }
+
 
     val solicitarPermiso = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
@@ -126,8 +129,8 @@ fun RegistrarAsistencia(
 
             }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
 
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 locationManager.getCurrentLocation(
                     proveedor,
                     null,

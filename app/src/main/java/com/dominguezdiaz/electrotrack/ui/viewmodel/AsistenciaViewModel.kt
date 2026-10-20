@@ -1,5 +1,4 @@
 package com.dominguezdiaz.electrotrack.ui.viewmodel
-
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,15 +8,20 @@ import com.dominguezdiaz.electrotrack.data.ElectroTrackDatabase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import com.dominguezdiaz.electrotrack.data.MIGRATION_1_2
 
 class AsistenciaViewModel(application: Application) : AndroidViewModel(application) {
+
 
     private val baseDatos = Room.databaseBuilder(
         application,
         ElectroTrackDatabase::class.java,
         "electrotrack_db"
 
-    ).build()
+    )
+        .addMigrations(MIGRATION_1_2)
+        .build()
+
 
     private val asistenciaDao = baseDatos.asistenciaDao()
 
@@ -39,7 +43,6 @@ class AsistenciaViewModel(application: Application) : AndroidViewModel(applicati
                 longitud = longitud
 
             )
-
             asistenciaDao.registrarAsistencia(asistencia)
             obtenerAsistencias()
 

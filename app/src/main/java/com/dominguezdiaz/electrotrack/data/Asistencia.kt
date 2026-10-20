@@ -1,5 +1,4 @@
 package com.dominguezdiaz.electrotrack.data
-
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -12,4 +11,5 @@ data class Asistencia (
     val fechaHora: String,
     val latitud: Double,
     val longitud: Double
+
 )

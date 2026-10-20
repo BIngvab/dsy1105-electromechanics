@@ -1,6 +1,4 @@
-
 package com.dominguezdiaz.electrotrack.ui.screen
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,13 +14,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
+
 @Composable
 fun MenuAdministrador(
     onCerrarSesion: () -> Unit,
-    onRevisarAsistencias: () -> Unit
+    onRevisarAsistencias: () -> Unit,
+    onAsignarTrabajo: () -> Unit
 
 ) {
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -31,18 +30,19 @@ fun MenuAdministrador(
         horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
-
         Text(
             text = "ElectroTrack",
             style = MaterialTheme.typography.headlineLarge
 
         )
 
+
         Spacer(modifier = Modifier.height(8.dp))
 
         Text("Menu de Administrador")
 
         Spacer(modifier = Modifier.height(24.dp))
+
 
         Button(
             onClick = { onRevisarAsistencias() },
@@ -53,10 +53,12 @@ fun MenuAdministrador(
 
         }
 
+
         Spacer(modifier = Modifier.height(12.dp))
 
+
         Button(
-            onClick = { },
+            onClick = { onAsignarTrabajo() },
             modifier = Modifier.fillMaxWidth()
 
         ) {
@@ -64,7 +66,9 @@ fun MenuAdministrador(
 
         }
 
+
         Spacer(modifier = Modifier.height(12.dp))
+
 
         Button(
             onClick = { },
@@ -75,7 +79,9 @@ fun MenuAdministrador(
 
         }
 
+
         Spacer(modifier = Modifier.height(12.dp))
+
 
         Button(
             onClick = { },
@@ -86,7 +92,9 @@ fun MenuAdministrador(
 
         }
 
+
         Spacer(modifier = Modifier.height(12.dp))
+
 
         Button(
             onClick = { onCerrarSesion() },

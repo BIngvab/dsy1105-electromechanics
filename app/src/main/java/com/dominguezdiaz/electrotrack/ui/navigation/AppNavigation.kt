@@ -1,16 +1,15 @@
-
 package com.dominguezdiaz.electrotrack.ui.navigation
-
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
-
 import com.dominguezdiaz.electrotrack.ui.screen.InicioSesion
 import com.dominguezdiaz.electrotrack.ui.screen.MenuUsuario
 import com.dominguezdiaz.electrotrack.ui.screen.MenuAdministrador
 import com.dominguezdiaz.electrotrack.ui.screen.RegistrarAsistencia
 import com.dominguezdiaz.electrotrack.ui.screen.RevisarAsistencias
+import com.dominguezdiaz.electrotrack.ui.screen.AsignarTrabajo
+
 
 object Routes {
     const val LOGIN = "login"
@@ -18,29 +17,23 @@ object Routes {
     const val ADMINISTRADOR = "administrador"
     const val ASISTENCIA = "asistencia"
     const val REVISAR_ASISTENCIAS = "revisar_asistencias"
+    const val ASIGNAR_TRABAJO = "asignar_trabajo"
 
 }
 
 @Composable
 fun AppNavigation() {
-
     val navController = rememberNavController()
-
     NavHost(
         navController = navController,
         startDestination = Routes.LOGIN
 
     ) {
-
         composable(Routes.LOGIN) {
-
             InicioSesion(
                 onLoginSuccess = { rol ->
-
                     if (rol == "USUARIO") {
-
                         navController.navigate(Routes.USUARIO) {
-
                             popUpTo(Routes.LOGIN) {
                                 inclusive = true
 
@@ -49,9 +42,7 @@ fun AppNavigation() {
                         }
 
                     } else if (rol == "ADMINISTRADOR") {
-
                         navController.navigate(Routes.ADMINISTRADOR) {
-
                             popUpTo(Routes.LOGIN) {
                                 inclusive = true
 
@@ -69,7 +60,6 @@ fun AppNavigation() {
 
 
         composable(Routes.ASISTENCIA) {
-
             RegistrarAsistencia(
                 onVolver = {
                     navController.popBackStack()
@@ -82,17 +72,13 @@ fun AppNavigation() {
 
 
         composable(Routes.USUARIO) {
-
             MenuUsuario(
                 onCerrarSesion = {
-
                     navController.navigate(Routes.LOGIN) {
-
                         popUpTo(Routes.USUARIO) {
                             inclusive = true
 
                         }
-
                         launchSingleTop = true
 
                     }
@@ -109,17 +95,13 @@ fun AppNavigation() {
 
 
         composable(Routes.ADMINISTRADOR) {
-
             MenuAdministrador(
                 onCerrarSesion = {
-
                     navController.navigate(Routes.LOGIN) {
-
                         popUpTo(Routes.ADMINISTRADOR) {
                             inclusive = true
 
                         }
-
                         launchSingleTop = true
 
                     }
@@ -128,25 +110,23 @@ fun AppNavigation() {
                 onRevisarAsistencias = {
                     navController.navigate(Routes.REVISAR_ASISTENCIAS)
 
+                },
+                onAsignarTrabajo = {
+                    navController.navigate(Routes.ASIGNAR_TRABAJO)
+
                 }
-
             )
-
         }
 
 
-        composable(Routes.REVISAR_ASISTENCIAS) {
 
-            RevisarAsistencias(
+        composable(Routes.ASIGNAR_TRABAJO) {
+            AsignarTrabajo(
                 onVolver = {
                     navController.popBackStack()
 
                 }
-
             )
-
         }
-
     }
-
 }

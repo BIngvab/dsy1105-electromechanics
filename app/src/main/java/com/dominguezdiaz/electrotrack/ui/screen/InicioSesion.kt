@@ -1,5 +1,4 @@
 package com.dominguezdiaz.electrotrack.ui.screen
-
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.foundation.layout.Arrangement
@@ -29,10 +28,10 @@ fun InicioSesion(
     loginViewModel: LoginViewModel = viewModel()
 
 ) {
-
     var rut by remember { mutableStateOf("") }
     var contrasena by remember { mutableStateOf("") }
     var mensaje by remember { mutableStateOf("") }
+
 
     Column(
         modifier = Modifier
@@ -42,8 +41,6 @@ fun InicioSesion(
         horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
-
-
         Text(
             text = "ElectroTrack",
             style = MaterialTheme.typography.headlineLarge
@@ -87,7 +84,6 @@ fun InicioSesion(
 
         Button (
             onClick = {
-
                 val resultado = loginViewModel.validarLogin(rut, contrasena)
 
                 if (resultado == "USUARIO" || resultado == "ADMINISTRADOR") {
@@ -126,7 +122,6 @@ fun InicioSesion(
         Text("Datos de Prueba: ")
         Text("rut: 99.999.999-9")
         Text("contraseña: 42368")
-
 
     }
 }

@@ -1,5 +1,4 @@
 package com.dominguezdiaz.electrotrack
-
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.ComponentActivity
@@ -26,11 +25,11 @@ class MainActivity : ComponentActivity () {
                 MaterialTheme {
                     Surface(
                         modifier = Modifier.fillMaxSize()
+
                     ) {
                         AppNavigation()
+
                     }
-
-
                 }
             }
         }
@@ -47,11 +46,12 @@ fun PantallaPrincipal() {
             .fillMaxSize()
             .padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
 
+    ) {
         Text(
             text = "ElectroTrack",
             style = MaterialTheme.typography.headlineLarge
+
         )
 
 

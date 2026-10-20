@@ -1,6 +1,4 @@
-
 package com.dominguezdiaz.electrotrack.ui.screen
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -30,11 +28,9 @@ fun RevisarAsistencias(
     asistenciaViewModel: AsistenciaViewModel = viewModel()
 
 ) {
-
     val asistencias by asistenciaViewModel.asistencias.collectAsState()
 
     LaunchedEffect(Unit) {
-
         asistenciaViewModel.obtenerAsistencias()
 
     }
@@ -46,40 +42,34 @@ fun RevisarAsistencias(
             .padding(24.dp)
 
     ) {
-
         Text(
             text = "Revisar asistencias",
             style = MaterialTheme.typography.headlineMedium
 
         )
 
+
         Spacer(modifier = Modifier.height(16.dp))
 
 
         if (asistencias.isEmpty()) {
-
             Text("No hay asistencias registradas.")
 
         } else {
-
             LazyColumn(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
 
             ) {
-
                 items(asistencias) { asistencia ->
-
                     Card(
                         modifier = Modifier.fillMaxWidth()
 
                     ) {
-
                         Column(
                             modifier = Modifier.padding(16.dp)
 
                         ) {
-
                             Text("Registro N° ${asistencia.id}")
 
                             Text("Tipo: ${asistencia.tipo}")
@@ -109,7 +99,6 @@ fun RevisarAsistencias(
             modifier = Modifier.fillMaxWidth()
 
         ) {
-
             Text("Volver al menú")
 
         }
