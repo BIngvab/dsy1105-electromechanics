@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.dominguezdiaz.electrotrack.ui.theme.ElectroTrackTheme
+import com.dominguezdiaz.electrotrack.ui.screen.InicioSesion
 
 class MainActivity : ComponentActivity () {
     override fun onCreate (savedInstanceState: Bundle?) {
@@ -26,13 +27,16 @@ class MainActivity : ComponentActivity () {
                     Surface(
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        PantallaPrincipal()
+                        InicioSesion()
                     }
+
+
                 }
             }
         }
     }
 }
+
 
 
 @Composable
