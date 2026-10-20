@@ -19,7 +19,8 @@ import androidx.compose.ui.unit.dp
 fun MenuAdministrador(
     onCerrarSesion: () -> Unit,
     onRevisarAsistencias: () -> Unit,
-    onAsignarTrabajo: () -> Unit
+    onAsignarTrabajo: () -> Unit,
+    onGestionarTrabajos: () -> Unit
 
 ) {
     Column(
@@ -84,7 +85,7 @@ fun MenuAdministrador(
 
 
         Button(
-            onClick = { },
+            onClick = {onGestionarTrabajos()},
             modifier = Modifier.fillMaxWidth()
 
         ) {

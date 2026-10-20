@@ -17,7 +17,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun MenuUsuario(
     onCerrarSesion: () -> Unit,
-    onRegistrarAsistencia: () -> Unit
+    onRegistrarAsistencia: () -> Unit,
+    onMisTrabajos: () -> Unit
 
 ) {
     Column(
@@ -56,7 +57,7 @@ fun MenuUsuario(
 
 
         Button(
-            onClick = { },
+            onClick = {onMisTrabajos()},
             modifier = Modifier.fillMaxWidth()
 
         ) {
