@@ -79,6 +79,18 @@ fun AppNavigation() {
         }
 
 
+        composable(Routes.REVISAR_ASISTENCIAS) {
+            RevisarAsistencias(
+                onVolver = {
+                    navController.popBackStack()
+
+                }
+
+            )
+
+        }
+
+
         composable(Routes.USUARIO) {
             MenuUsuario(
                 onCerrarSesion = {
