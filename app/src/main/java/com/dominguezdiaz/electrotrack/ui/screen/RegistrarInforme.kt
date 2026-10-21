@@ -10,7 +10,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,6 +33,8 @@ import android.content.Context
 import java.io.File
 import java.io.FileOutputStream
 import java.util.UUID
+import com.dominguezdiaz.electrotrack.ui.validation.CampoValidado
+import com.dominguezdiaz.electrotrack.ui.validation.Validaciones
 import androidx.compose.ui.platform.LocalContext
 
 
@@ -49,6 +50,9 @@ fun RegistrarInforme(
     var observaciones by remember { mutableStateOf("") }
     var mensaje by remember { mutableStateOf("") }
     var fotografia by remember { mutableStateOf<Bitmap?>(null) }
+    var errorTrabajo by remember { mutableStateOf<String?>(null) }
+    var errorDescripcion by remember { mutableStateOf<String?>(null) }
+    var errorObservaciones by remember { mutableStateOf<String?>(null) }
 
 
     val camaraLauncher = rememberLauncherForActivityResult(
@@ -84,39 +88,36 @@ fun RegistrarInforme(
         Spacer(modifier = Modifier.height(24.dp))
 
 
-        OutlinedTextField(
-            value = trabajoId,
-            onValueChange = { trabajoId = it },
-            label = { Text("Número del trabajo") },
-            modifier = Modifier.fillMaxWidth(),
+        CampoValidado(
+            valor = trabajoId,
+            alCambiar = { trabajoId = it; errorTrabajo = null },
+            etiqueta = "Número del trabajo",
+            error = errorTrabajo,
             singleLine = true
-
         )
 
 
         Spacer(modifier = Modifier.height(12.dp))
 
 
-        OutlinedTextField(
-            value = descripcion,
-            onValueChange = { descripcion = it },
-            label = { Text("Descripción del mantenimiento") },
-            modifier = Modifier.fillMaxWidth(),
+        CampoValidado(
+            valor = descripcion,
+            alCambiar = { descripcion = it; errorDescripcion = null },
+            etiqueta = "Descripción del mantenimiento",
+            error = errorDescripcion,
             minLines = 3
-
         )
 
 
         Spacer(modifier = Modifier.height(12.dp))
 
 
-        OutlinedTextField(
-            value = observaciones,
-            onValueChange = { observaciones = it },
-            label = { Text("Observaciones") },
-            modifier = Modifier.fillMaxWidth(),
+        CampoValidado(
+            valor = observaciones,
+            alCambiar = { observaciones = it; errorObservaciones = null },
+            etiqueta = "Observaciones",
+            error = errorObservaciones,
             minLines = 3
-
         )
 
 
@@ -157,11 +158,13 @@ fun RegistrarInforme(
 
         Button(
             onClick = {
+                errorTrabajo = Validaciones.validarNumeroTrabajo(trabajoId)
+                errorDescripcion = Validaciones.validarDescripcion(descripcion)
+                errorObservaciones = Validaciones.validarObservaciones(observaciones)
                 val id = trabajoId.toIntOrNull()
 
-                if (id == null || id <= 0 ||
-                    descripcion.isBlank() ||
-                    observaciones.isBlank()
+                if (errorTrabajo != null || errorDescripcion != null ||
+                    errorObservaciones != null || id == null
 
                 ) {
                     mensaje = "Completa todos los campos correctamente."
