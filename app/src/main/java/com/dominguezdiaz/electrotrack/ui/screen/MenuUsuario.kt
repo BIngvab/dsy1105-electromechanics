@@ -18,7 +18,8 @@ import androidx.compose.ui.unit.dp
 fun MenuUsuario(
     onCerrarSesion: () -> Unit,
     onRegistrarAsistencia: () -> Unit,
-    onMisTrabajos: () -> Unit
+    onMisTrabajos: () -> Unit,
+    onRegistrarInforme: () -> Unit
 
 ) {
     Column(
@@ -70,7 +71,7 @@ fun MenuUsuario(
 
 
         Button(
-            onClick = { },
+            onClick = {onRegistrarInforme()},
             modifier = Modifier.fillMaxWidth()
 
         ) {

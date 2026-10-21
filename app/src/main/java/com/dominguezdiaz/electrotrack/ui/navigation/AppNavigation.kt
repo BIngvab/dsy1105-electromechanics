@@ -11,6 +11,8 @@ import com.dominguezdiaz.electrotrack.ui.screen.RevisarAsistencias
 import com.dominguezdiaz.electrotrack.ui.screen.AsignarTrabajo
 import com.dominguezdiaz.electrotrack.ui.screen.MisTrabajos
 import com.dominguezdiaz.electrotrack.ui.screen.GestionarTrabajos
+import com.dominguezdiaz.electrotrack.ui.screen.RegistrarInforme
+import com.dominguezdiaz.electrotrack.ui.screen.RevisarInformes
 
 
 object Routes {
@@ -22,6 +24,8 @@ object Routes {
     const val ASIGNAR_TRABAJO = "asignar_trabajo"
     const val MIS_TRABAJOS = "mis_trabajos"
     const val GESTIONAR_TRABAJOS = "gestionar_trabajos"
+    const val REGISTRAR_INFORME = "registrar_informe"
+    const val REVISAR_INFORMES = "revisar_informes"
 
 }
 
@@ -95,8 +99,11 @@ fun AppNavigation() {
                 onMisTrabajos = {
                     navController.navigate(Routes.MIS_TRABAJOS)
 
-                }
+                },
+                onRegistrarInforme = {
+                    navController.navigate(Routes.REGISTRAR_INFORME)
 
+                }
 
             )
 
@@ -126,6 +133,10 @@ fun AppNavigation() {
                 },
                 onGestionarTrabajos = {
                     navController.navigate(Routes.GESTIONAR_TRABAJOS)
+
+                },
+                onRevisarInformes = {
+                    navController.navigate(Routes.REVISAR_INFORMES)
 
                 }
 
@@ -168,5 +179,30 @@ fun AppNavigation() {
         }
 
 
+
+        composable(Routes.REGISTRAR_INFORME) {
+            RegistrarInforme(
+                onVolver = {
+                    navController.popBackStack()
+
+                }
+
+            )
+
+        }
+
+
+        composable(Routes.REVISAR_INFORMES) {
+            RevisarInformes(
+                onVolver = {
+                    navController.popBackStack()
+
+                }
+
+            )
+
+        }
+
     }
+
 }

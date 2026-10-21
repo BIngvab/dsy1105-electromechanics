@@ -9,6 +9,7 @@ import com.dominguezdiaz.electrotrack.data.Trabajo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import com.dominguezdiaz.electrotrack.data.MIGRATION_2_3
 
 
 class TrabajoViewModel(application: Application) : AndroidViewModel(application) {
@@ -19,8 +20,14 @@ class TrabajoViewModel(application: Application) : AndroidViewModel(application)
         "electrotrack_db"
 
     )
-        .addMigrations(MIGRATION_1_2)
+
+        .addMigrations(
+            MIGRATION_1_2,
+            MIGRATION_2_3
+
+        )
         .build()
+
 
 
     private val trabajoDao = baseDatos.trabajoDao()

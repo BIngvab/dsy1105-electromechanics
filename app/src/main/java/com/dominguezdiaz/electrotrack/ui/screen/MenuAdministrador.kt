@@ -20,7 +20,8 @@ fun MenuAdministrador(
     onCerrarSesion: () -> Unit,
     onRevisarAsistencias: () -> Unit,
     onAsignarTrabajo: () -> Unit,
-    onGestionarTrabajos: () -> Unit
+    onGestionarTrabajos: () -> Unit,
+    onRevisarInformes: () -> Unit
 
 ) {
     Column(
@@ -72,7 +73,7 @@ fun MenuAdministrador(
 
 
         Button(
-            onClick = { },
+            onClick = {onRevisarInformes()},
             modifier = Modifier.fillMaxWidth()
 
         ) {
