@@ -21,6 +21,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.material3.Button
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dominguezdiaz.electrotrack.ui.viewmodel.LoginViewModel
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
+import androidx.compose.runtime.LaunchedEffect
+
+
+
 
 @Composable
 fun InicioSesion(
@@ -31,6 +38,13 @@ fun InicioSesion(
     var rut by remember { mutableStateOf("") }
     var contrasena by remember { mutableStateOf("") }
     var mensaje by remember { mutableStateOf("") }
+    var mostrarTitulo by remember { mutableStateOf(false) }
+
+
+    LaunchedEffect(Unit) {
+        mostrarTitulo = true
+
+    }
 
 
     Column(
@@ -41,11 +55,21 @@ fun InicioSesion(
         horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
-        Text(
-            text = "ElectroTrack",
-            style = MaterialTheme.typography.headlineLarge
+        AnimatedVisibility(
+            visible = mostrarTitulo,
+            enter = fadeIn() + slideInVertically(
+                initialOffsetY = { -40 }
 
-        )
+            )
+
+        ) {
+            Text(
+                text = "ElectroTrack",
+                style = MaterialTheme.typography.headlineLarge
+
+            )
+
+        }
 
 
         Spacer(modifier = Modifier.height(8.dp))
