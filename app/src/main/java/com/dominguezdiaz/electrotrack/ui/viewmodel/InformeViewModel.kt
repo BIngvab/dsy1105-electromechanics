@@ -7,6 +7,7 @@ import com.dominguezdiaz.electrotrack.data.ElectroTrackDatabase
 import com.dominguezdiaz.electrotrack.data.Informe
 import com.dominguezdiaz.electrotrack.data.MIGRATION_1_2
 import com.dominguezdiaz.electrotrack.data.MIGRATION_2_3
+import com.dominguezdiaz.electrotrack.data.MIGRATION_3_4
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -22,7 +23,8 @@ class InformeViewModel(application: Application) : AndroidViewModel(application)
     )
         .addMigrations(
             MIGRATION_1_2,
-            MIGRATION_2_3
+            MIGRATION_2_3,
+            MIGRATION_3_4
 
         )
         .build()
@@ -41,7 +43,8 @@ class InformeViewModel(application: Application) : AndroidViewModel(application)
         trabajoId: Int,
         descripcion: String,
         observaciones: String,
-        fechaHora: String
+        fechaHora: String,
+        rutaFotografia: String? = null
 
     ) {
         viewModelScope.launch {
@@ -49,11 +52,12 @@ class InformeViewModel(application: Application) : AndroidViewModel(application)
                 trabajoId = trabajoId,
                 descripcion = descripcion,
                 observaciones = observaciones,
-                fechaHora = fechaHora
+                fechaHora = fechaHora,
+                rutaFotografia = rutaFotografia
 
             )
-            informeDao.registrarInforme(informe)
 
+            informeDao.registrarInforme(informe)
 
             obtenerInformes()
 

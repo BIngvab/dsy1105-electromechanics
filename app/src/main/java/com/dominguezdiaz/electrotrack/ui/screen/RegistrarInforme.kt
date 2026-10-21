@@ -24,6 +24,17 @@ import com.dominguezdiaz.electrotrack.ui.viewmodel.InformeViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import android.graphics.Bitmap
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
+import android.content.Context
+import java.io.File
+import java.io.FileOutputStream
+import java.util.UUID
+import androidx.compose.ui.platform.LocalContext
 
 
 @Composable
@@ -32,10 +43,27 @@ fun RegistrarInforme(
     informeViewModel: InformeViewModel = viewModel()
 
 ) {
+    val context = LocalContext.current
     var trabajoId by remember { mutableStateOf("") }
     var descripcion by remember { mutableStateOf("") }
     var observaciones by remember { mutableStateOf("") }
     var mensaje by remember { mutableStateOf("") }
+    var fotografia by remember { mutableStateOf<Bitmap?>(null) }
+
+
+    val camaraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicturePreview()
+    ) { imagen ->
+        if (imagen != null) {
+            fotografia = imagen
+            mensaje = "Fotografía capturada correctamente."
+
+        } else {
+            mensaje = "No se capturó ninguna fotografía."
+
+        }
+
+    }
 
 
     Column(
@@ -94,6 +122,38 @@ fun RegistrarInforme(
 
         Spacer(modifier = Modifier.height(24.dp))
 
+        Button(
+            onClick = {
+                camaraLauncher.launch(null)
+
+            },
+            modifier = Modifier.fillMaxWidth()
+
+        ) {
+            Text("Tomar fotografía")
+
+        }
+
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+
+        fotografia?.let { imagen ->
+            Image(
+                bitmap = imagen.asImageBitmap(),
+                contentDescription = "Fotografía del mantenimiento",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp),
+                contentScale = ContentScale.Fit
+
+            )
+
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+        }
+
 
         Button(
             onClick = {
@@ -114,27 +174,40 @@ fun RegistrarInforme(
                     ).format(Date())
 
 
-                    informeViewModel.registrarInforme(
-                        trabajoId = id,
-                        descripcion = descripcion.trim(),
-                        observaciones = observaciones.trim(),
-                        fechaHora = fechaHora
+                    val rutaFotografia = fotografia?.let { imagen ->
+                        guardarFotografia(context, imagen)
 
-                    )
+                    }
 
 
-                    mensaje = "Se solicitó el registro del informe."
+                    if (fotografia != null && rutaFotografia == null) {
+                        mensaje = "No se pudo guardar la fotografía."
 
-                    trabajoId = ""
+                    } else {
+                        informeViewModel.registrarInforme(
+                            trabajoId = id,
+                            descripcion = descripcion.trim(),
+                            observaciones = observaciones.trim(),
+                            fechaHora = fechaHora,
+                            rutaFotografia = rutaFotografia
 
-                    descripcion = ""
+                        )
 
-                    observaciones = ""
+
+                        mensaje = "Se solicitó el registro del informe."
+                        trabajoId = ""
+                        descripcion = ""
+                        observaciones = ""
+                        fotografia = null
+
+                    }
 
                 }
 
             },
             modifier = Modifier.fillMaxWidth()
+
+
 
         ) {
             Text("Guardar informe")
@@ -162,6 +235,52 @@ fun RegistrarInforme(
             Text("Volver al menú")
 
         }
+
+
+
+    }
+
+
+
+}
+
+
+private fun guardarFotografia(
+    context: Context,
+    fotografia: Bitmap
+
+): String? {
+    return try {
+        val carpeta = File(context.filesDir, "fotografias")
+
+        if (!carpeta.exists()) {
+            carpeta.mkdirs()
+
+        }
+
+
+        val archivo = File(
+            carpeta,
+            "evidencia_${UUID.randomUUID()}.jpg"
+
+        )
+
+
+        FileOutputStream(archivo).use { salida ->
+            fotografia.compress(
+                Bitmap.CompressFormat.JPEG,
+                90,
+                salida
+
+            )
+
+        }
+
+
+        archivo.absolutePath
+
+    } catch (e: Exception) {
+        null
 
     }
 

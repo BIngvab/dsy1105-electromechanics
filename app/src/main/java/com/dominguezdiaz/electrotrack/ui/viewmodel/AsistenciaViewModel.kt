@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import com.dominguezdiaz.electrotrack.data.MIGRATION_1_2
 import com.dominguezdiaz.electrotrack.data.MIGRATION_2_3
+import com.dominguezdiaz.electrotrack.data.MIGRATION_3_4
 
 class AsistenciaViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -22,7 +23,8 @@ class AsistenciaViewModel(application: Application) : AndroidViewModel(applicati
     )
         .addMigrations(
             MIGRATION_1_2,
-            MIGRATION_2_3
+            MIGRATION_2_3,
+            MIGRATION_3_4
 
         )
         .build()

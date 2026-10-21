@@ -10,6 +10,7 @@ data class Informe(
     val trabajoId: Int,
     val descripcion: String,
     val observaciones: String,
-    val fechaHora: String
+    val fechaHora: String,
+    val rutaFotografia: String? = null
 
 )

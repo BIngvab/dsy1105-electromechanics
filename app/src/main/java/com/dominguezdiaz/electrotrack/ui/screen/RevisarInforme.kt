@@ -1,4 +1,6 @@
 package com.dominguezdiaz.electrotrack.ui.screen
+import android.graphics.BitmapFactory
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,7 +18,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dominguezdiaz.electrotrack.ui.viewmodel.InformeViewModel
@@ -29,6 +34,8 @@ fun RevisarInformes(
 
 ) {
     val informes by informeViewModel.informes.collectAsState()
+
+
     LaunchedEffect(Unit) {
         informeViewModel.obtenerInformes()
 
@@ -79,6 +86,41 @@ fun RevisarInformes(
 
                             Text("Fecha: ${informe.fechaHora}")
 
+
+                            informe.rutaFotografia?.let { ruta ->
+                                val fotografia = remember(ruta) {
+                                    BitmapFactory.decodeFile(ruta)
+
+                                }
+
+
+                                Spacer(modifier = Modifier.height(12.dp))
+
+
+                                if (fotografia != null) {
+                                    Text("Evidencia fotográfica:")
+
+
+                                    Spacer(modifier = Modifier.height(8.dp))
+
+
+                                    Image(
+                                        bitmap = fotografia.asImageBitmap(),
+                                        contentDescription = "Evidencia del informe ${informe.id}",
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(200.dp),
+                                        contentScale = ContentScale.Fit
+
+                                    )
+
+                                } else {
+                                    Text("No se pudo cargar la fotografía.")
+
+                                }
+
+                            }
+
                         }
 
                     }
@@ -105,4 +147,3 @@ fun RevisarInformes(
     }
 
 }
-
