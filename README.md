@@ -1,4 +1,12 @@
 # ElectroTrack
+## Integrantes del equipo
+
+- Fabian Dominguez Rojas
+- Damian Diaz
+
+**Institución:** Duoc UC  
+**Asignatura:** DSY1105 — Desarrollo de Aplicaciones Móviles  
+**Caso:** Electromechanics Ingeniería SpA
 
 ## Descripción del proyecto
 
@@ -20,6 +28,7 @@ Este proyecto corresponde a un prototipo académico desarrollado para la asignat
 - GPS y servicios de ubicación
 - Corrutinas y StateFlow
 - Git y GitHub
+- Cámara de Android
 
 ## Funcionalidades
 
@@ -99,8 +108,12 @@ El proyecto utiliza el patrón MVVM (Model-View-ViewModel).
 
 ## Recursos nativos y animaciones
 
-- Utilización de GPS para registrar la ubicación de las asistencias.
-- Animación de entrada del título en la pantalla de inicio de sesión mediante Jetpack Compose.
+- GPS: registro de ubicación, fecha y hora de las asistencias.
+- Cámara: captura de fotografías como evidencia en los informes de mantenimiento.
+- Almacenamiento local: las fotografías se guardan en el almacenamiento privado de la aplicación y sus rutas se registran mediante Room.
+- Animación: aparición del título ElectroTrack mediante Jetpack Compose.
+
+Las fotografías son opcionales y la cámara utiliza una captura de vista previa.
 
 ## Alcance del prototipo
 
