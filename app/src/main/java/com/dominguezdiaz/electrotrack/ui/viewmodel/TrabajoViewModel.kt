@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import com.dominguezdiaz.electrotrack.data.MIGRATION_2_3
 import com.dominguezdiaz.electrotrack.data.MIGRATION_3_4
+import com.dominguezdiaz.electrotrack.data.MIGRATION_4_5
 
 
 class TrabajoViewModel(application: Application) : AndroidViewModel(application) {
@@ -25,7 +26,8 @@ class TrabajoViewModel(application: Application) : AndroidViewModel(application)
         .addMigrations(
             MIGRATION_1_2,
             MIGRATION_2_3,
-            MIGRATION_3_4
+            MIGRATION_3_4,
+            MIGRATION_4_5
 
 
         )

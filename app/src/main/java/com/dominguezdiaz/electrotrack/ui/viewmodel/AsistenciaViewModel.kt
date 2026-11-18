@@ -10,11 +10,14 @@ import com.dominguezdiaz.electrotrack.data.ElectroTrackDatabase
 import com.dominguezdiaz.electrotrack.data.MIGRATION_1_2
 import com.dominguezdiaz.electrotrack.data.MIGRATION_2_3
 import com.dominguezdiaz.electrotrack.data.MIGRATION_3_4
+import com.dominguezdiaz.electrotrack.data.MIGRATION_4_5
 import com.dominguezdiaz.electrotrack.data.remote.AsistenciaDto
 import com.dominguezdiaz.electrotrack.data.remote.RetrofitClient
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+
 
 class AsistenciaViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -27,7 +30,8 @@ class AsistenciaViewModel(application: Application) : AndroidViewModel(applicati
         .addMigrations(
             MIGRATION_1_2,
             MIGRATION_2_3,
-            MIGRATION_3_4
+            MIGRATION_3_4,
+            MIGRATION_4_5
 
         )
         .build()
@@ -39,6 +43,13 @@ class AsistenciaViewModel(application: Application) : AndroidViewModel(applicati
 
     private val _asistencias = MutableStateFlow<List<Asistencia>>(emptyList())
     val asistencias = _asistencias.asStateFlow()
+
+
+    init {
+        obtenerAsistencias()
+        sincronizarAsistencias()
+
+    }
 
 
     fun registrarAsistencia(
@@ -57,45 +68,74 @@ class AsistenciaViewModel(application: Application) : AndroidViewModel(applicati
 
             )
 
-
-            // Guardamos la asistencia localmente con Room
+            // Guardamos primero la asistencia en Room
             asistenciaDao.registrarAsistencia(asistencia)
 
             // Actualizamos la lista local
-            obtenerAsistencias()
+            _asistencias.value = asistenciaDao.obtenerAsistencias()
 
+            // Intentamos sincronizar los registros pendientes
+            sincronizarAsistenciasPendientes()
 
-            // Enviamos la asistencia al microservicio
-            try {
-                val asistenciaRemota = AsistenciaDto(
-                    rutTrabajador = "99.999.999-9",
-                    tipo = tipo,
-                    fechaHora = fechaHora,
-                    latitud = latitud,
-                    longitud = longitud
-
-                )
-
-                asistenciaApi.registrarAsistencia(asistenciaRemota)
-
-                Log.d("ElectroTrack", "Asistencia enviada al microservicio")
-
-            } catch (e: Exception) {
-
-                Log.e(
-                    "ElectroTrack",
-                    "No se pudo enviar la asistencia al microservicio",
-                    e
-
-                )
-            }
         }
     }
+
 
     fun obtenerAsistencias() {
         viewModelScope.launch {
             _asistencias.value = asistenciaDao.obtenerAsistencias()
 
         }
+    }
+
+
+    fun sincronizarAsistencias() {
+        viewModelScope.launch {
+            sincronizarAsistenciasPendientes()
+
+        }
+    }
+
+
+    private suspend fun sincronizarAsistenciasPendientes() {
+        val pendientes = asistenciaDao.obtenerAsistenciasPendientes()
+
+        for (asistencia in pendientes) {
+            try {
+                val asistenciaRemota = AsistenciaDto(
+                    rutTrabajador = "99.999.999-9",
+                    tipo = asistencia.tipo,
+                    fechaHora = asistencia.fechaHora,
+                    latitud = asistencia.latitud,
+                    longitud = asistencia.longitud,
+                    uuid = asistencia.uuid
+
+                )
+
+
+                asistenciaApi.registrarAsistencia(asistenciaRemota)
+
+                asistenciaDao.marcarComoSincronizada(asistencia.uuid)
+
+                Log.d(
+                    "ElectroTrack",
+                    "Asistencia sincronizada: ${asistencia.uuid}"
+
+                )
+
+            } catch (e: CancellationException) {
+                throw e
+
+            } catch (e: Exception) {
+                Log.e(
+                    "ElectroTrack",
+                    "No se pudo sincronizar: ${asistencia.uuid}",
+                    e
+
+                )
+            }
+        }
+
+        _asistencias.value = asistenciaDao.obtenerAsistencias()
     }
 }
