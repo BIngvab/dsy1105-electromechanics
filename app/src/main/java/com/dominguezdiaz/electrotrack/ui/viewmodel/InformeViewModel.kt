@@ -9,6 +9,7 @@ import com.dominguezdiaz.electrotrack.data.MIGRATION_1_2
 import com.dominguezdiaz.electrotrack.data.MIGRATION_2_3
 import com.dominguezdiaz.electrotrack.data.MIGRATION_3_4
 import com.dominguezdiaz.electrotrack.data.MIGRATION_4_5
+import com.dominguezdiaz.electrotrack.data.MIGRATION_5_6
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -26,7 +27,9 @@ class InformeViewModel(application: Application) : AndroidViewModel(application)
             MIGRATION_1_2,
             MIGRATION_2_3,
             MIGRATION_3_4,
-            MIGRATION_4_5
+            MIGRATION_4_5,
+            MIGRATION_5_6
+
 
         )
         .build()

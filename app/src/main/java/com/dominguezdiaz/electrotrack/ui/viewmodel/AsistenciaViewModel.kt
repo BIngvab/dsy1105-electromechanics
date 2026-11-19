@@ -11,6 +11,7 @@ import com.dominguezdiaz.electrotrack.data.MIGRATION_1_2
 import com.dominguezdiaz.electrotrack.data.MIGRATION_2_3
 import com.dominguezdiaz.electrotrack.data.MIGRATION_3_4
 import com.dominguezdiaz.electrotrack.data.MIGRATION_4_5
+import com.dominguezdiaz.electrotrack.data.MIGRATION_5_6
 import com.dominguezdiaz.electrotrack.data.remote.AsistenciaDto
 import com.dominguezdiaz.electrotrack.data.remote.RetrofitClient
 import kotlinx.coroutines.CancellationException
@@ -31,7 +32,8 @@ class AsistenciaViewModel(application: Application) : AndroidViewModel(applicati
             MIGRATION_1_2,
             MIGRATION_2_3,
             MIGRATION_3_4,
-            MIGRATION_4_5
+            MIGRATION_4_5,
+            MIGRATION_5_6
 
         )
         .build()

@@ -2,6 +2,7 @@ package com.dominguezdiaz.electrotrack.data
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 
 
 @Dao
@@ -21,5 +22,13 @@ interface TrabajoDao {
 
     @Query("UPDATE trabajos SET estado = :estado WHERE id = :id")
     suspend fun actualizarEstado(id: Int, estado: String)
+
+
+    @Query("SELECT * FROM trabajos WHERE idServidor = :idServidor LIMIT 1")
+    suspend fun obtenerTrabajoPorIdServidor(idServidor: Long): Trabajo?
+
+
+    @Update
+    suspend fun actualizarTrabajo(trabajo: Trabajo)
 
 }

@@ -38,6 +38,8 @@ fun MisTrabajos(
             "99.999.999-9"
         )
 
+        trabajoViewModel.sincronizarTrabajos()
+
     }
 
 

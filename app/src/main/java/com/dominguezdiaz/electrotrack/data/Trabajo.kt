@@ -1,4 +1,5 @@
 package com.dominguezdiaz.electrotrack.data
+
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -10,6 +11,7 @@ data class Trabajo(
     val titulo: String,
     val descripcion: String,
     val trabajador: String,
-    val estado: String = "Pendiente"
+    val estado: String = "Pendiente",
+    val idServidor: Long? = null
 
 )

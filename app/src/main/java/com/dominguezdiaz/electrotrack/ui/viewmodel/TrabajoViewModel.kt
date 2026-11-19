@@ -1,4 +1,5 @@
 package com.dominguezdiaz.electrotrack.ui.viewmodel
+
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,6 +13,11 @@ import kotlinx.coroutines.launch
 import com.dominguezdiaz.electrotrack.data.MIGRATION_2_3
 import com.dominguezdiaz.electrotrack.data.MIGRATION_3_4
 import com.dominguezdiaz.electrotrack.data.MIGRATION_4_5
+import com.dominguezdiaz.electrotrack.data.MIGRATION_5_6
+import com.dominguezdiaz.electrotrack.data.remote.RetrofitClient
+import com.dominguezdiaz.electrotrack.network.TrabajoDto
+import android.util.Log
+import kotlinx.coroutines.CancellationException
 
 
 class TrabajoViewModel(application: Application) : AndroidViewModel(application) {
@@ -27,16 +33,103 @@ class TrabajoViewModel(application: Application) : AndroidViewModel(application)
             MIGRATION_1_2,
             MIGRATION_2_3,
             MIGRATION_3_4,
-            MIGRATION_4_5
+            MIGRATION_4_5,
+            MIGRATION_5_6
 
 
         )
         .build()
 
 
-
     private val trabajoDao = baseDatos.trabajoDao()
 
+
+    private val trabajoApi = RetrofitClient.trabajoApi
+
+
+    private fun convertirATrabajo(trabajoDto: TrabajoDto): Trabajo {
+
+        return Trabajo(
+            titulo = trabajoDto.titulo,
+            descripcion = trabajoDto.descripcion,
+            trabajador = trabajoDto.trabajador,
+            estado = trabajoDto.estado,
+            idServidor = trabajoDto.id
+
+        )
+
+    }
+
+
+    private suspend fun guardarTrabajoRemoto(trabajoDto: TrabajoDto) {
+
+        val idServidor = trabajoDto.id ?: return
+
+        val trabajoExistente = trabajoDao.obtenerTrabajoPorIdServidor(idServidor)
+
+        if (trabajoExistente == null) {
+
+            val trabajoNuevo = convertirATrabajo(trabajoDto)
+
+            trabajoDao.registrarTrabajo(trabajoNuevo)
+
+        } else {
+
+            val trabajoActualizado = convertirATrabajo(trabajoDto).copy(
+                id = trabajoExistente.id
+
+            )
+
+            trabajoDao.actualizarTrabajo(trabajoActualizado)
+
+        }
+
+    }
+
+
+    fun sincronizarTrabajos() {
+
+        viewModelScope.launch {
+
+            try {
+
+                val trabajosRemotos = trabajoApi.listarTrabajos()
+
+                for (trabajoDto in trabajosRemotos) {
+
+                    guardarTrabajoRemoto(trabajoDto)
+
+                }
+
+                _trabajos.value = trabajoDao.obtenerTrabajosPorTrabajador(
+                    "99.999.999-9"
+
+                )
+
+                Log.d(
+                    "ElectroTrack",
+                    "Trabajos sincronizados correctamente"
+
+                )
+
+            } catch (e: CancellationException) {
+
+                throw e
+
+            } catch (e: Exception) {
+
+                Log.e(
+                    "ElectroTrack",
+                    "Error al sincronizar trabajos",
+                    e
+
+                )
+
+            }
+
+        }
+
+    }
 
     private val _trabajos = MutableStateFlow<List<Trabajo>>(emptyList())
     val trabajos = _trabajos.asStateFlow()
