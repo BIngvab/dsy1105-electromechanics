@@ -1,4 +1,5 @@
 package com.dominguezdiaz.electrotrack.ui.screen
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,6 +12,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -21,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dominguezdiaz.electrotrack.ui.viewmodel.TrabajoViewModel
 
-
 @Composable
 fun MisTrabajos(
     onVolver: () -> Unit,
@@ -31,24 +32,18 @@ fun MisTrabajos(
     val trabajos by trabajoViewModel.trabajos.collectAsState()
 
 
-
     LaunchedEffect(Unit) {
-
         trabajoViewModel.obtenerTrabajosPorTrabajador(
             "99.999.999-9"
         )
-
         trabajoViewModel.sincronizarTrabajos()
-
     }
-
 
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(24.dp)
-
     ) {
         Text(
             text = "Mis trabajos asignados",
@@ -69,49 +64,73 @@ fun MisTrabajos(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
 
             ) {
-                items(trabajos) { trabajo ->
+                items(trabajos, key = { it.id }) { trabajo ->
                     Card(
                         modifier = Modifier.fillMaxWidth()
 
                     ) {
                         Column(
-                            modifier = Modifier.padding(16.dp)
+                            modifier = Modifier.padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(6.dp)
 
                         ) {
                             Text("Trabajo N° ${trabajo.id}")
-
                             Text("Título: ${trabajo.titulo}")
-
                             Text("Descripción: ${trabajo.descripcion}")
-
                             Text("Trabajador: ${trabajo.trabajador}")
-
                             Text("Estado: ${trabajo.estado}")
 
+                            Spacer(
+                                modifier = Modifier.height(8.dp)
+
+                            )
+
+                            if (trabajo.estado != "En proceso") {
+                                OutlinedButton(
+                                    onClick = {
+                                        trabajoViewModel.actualizarEstado(
+                                            trabajo.id,
+                                            "En proceso"
+
+                                        )
+                                    },
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text("Marcar en proceso")
+
+                                }
+                            }
+
+                            if (trabajo.estado != "Finalizado") {
+                                Button(
+                                    onClick = {
+                                        trabajoViewModel.actualizarEstado(
+                                            trabajo.id,
+                                            "Finalizado"
+
+                                        )
+                                    },
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text("Marcar finalizado")
+
+                                }
+                            }
                         }
-
                     }
-
                 }
-
             }
-
         }
-
 
         Spacer(modifier = Modifier.height(16.dp))
 
-
         Button(
-            onClick = { onVolver() },
+            onClick = onVolver,
             modifier = Modifier.fillMaxWidth()
 
         ) {
             Text("Volver al menú")
 
         }
-
     }
-
 }
-

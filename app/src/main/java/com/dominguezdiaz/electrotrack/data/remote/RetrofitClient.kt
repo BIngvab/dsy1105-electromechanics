@@ -10,15 +10,17 @@ object RetrofitClient {
 
     private val clienteHttp = OkHttpClient.Builder()
         .proxy(Proxy.NO_PROXY)
+        .connectTimeout(15, java.util.concurrent.TimeUnit.SECONDS)
         .build()
 
 
     private const val BASE_URL_ASISTENCIAS = "http://10.0.2.2:8081/"
-    private const val BASE_URL_TRABAJOS = "http://10.0.2.2:8082/"
+    private const val BASE_URL_TRABAJOS = "http://127.0.0.1:8082/"
 
 
     val asistenciaApi: AsistenciaApi by lazy {
         Retrofit.Builder()
+            .client(clienteHttp)
             .baseUrl(BASE_URL_ASISTENCIAS)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -29,6 +31,7 @@ object RetrofitClient {
 
     val trabajoApi: TrabajoApi by lazy {
         Retrofit.Builder()
+            .client(clienteHttp)
             .baseUrl(BASE_URL_TRABAJOS)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

@@ -36,7 +36,6 @@ class TrabajoViewModel(application: Application) : AndroidViewModel(application)
             MIGRATION_4_5,
             MIGRATION_5_6
 
-
         )
         .build()
 
@@ -94,6 +93,13 @@ class TrabajoViewModel(application: Application) : AndroidViewModel(application)
             try {
 
                 val trabajosRemotos = trabajoApi.listarTrabajos()
+                Log.d("ElectroTrack", "Servidor devolvió ${trabajosRemotos.size} trabajos")
+                for (trabajo in trabajosRemotos) {
+                    Log.d(
+                        "ElectroTrack",
+                        "Trabajo remoto: ID=${trabajo.id}, trabajador=${trabajo.trabajador}, titulo=${trabajo.titulo}"
+                    )
+                }
 
                 for (trabajoDto in trabajosRemotos) {
 
@@ -131,6 +137,7 @@ class TrabajoViewModel(application: Application) : AndroidViewModel(application)
 
     }
 
+
     private val _trabajos = MutableStateFlow<List<Trabajo>>(emptyList())
     val trabajos = _trabajos.asStateFlow()
 
@@ -142,14 +149,59 @@ class TrabajoViewModel(application: Application) : AndroidViewModel(application)
 
     ) {
         viewModelScope.launch {
+
             val trabajo = Trabajo(
                 titulo = titulo,
                 descripcion = descripcion,
                 trabajador = trabajador
 
             )
-            trabajoDao.registrarTrabajo(trabajo)
+
+            val idLocal = trabajoDao.registrarTrabajo(trabajo)
+
             obtenerTrabajos()
+
+            try {
+
+                val trabajoDto = TrabajoDto(
+                    titulo = titulo,
+                    descripcion = descripcion,
+                    trabajador = trabajador,
+                    estado = trabajo.estado
+
+                )
+
+                val trabajoRemoto = trabajoApi.registrarTrabajo(trabajoDto)
+
+                val trabajoActualizado = convertirATrabajo(trabajoRemoto).copy(
+                    id = idLocal.toInt()
+
+                )
+
+                trabajoDao.actualizarTrabajo(trabajoActualizado)
+
+                obtenerTrabajos()
+
+                Log.d(
+                    "ElectroTrack",
+                    "Trabajo registrado en el servidor correctamente"
+
+                )
+
+            } catch (e: CancellationException) {
+
+                throw e
+
+            } catch (e: Exception) {
+
+                Log.e(
+                    "ElectroTrack",
+                    "Trabajo guardado localmente, pero no enviado al servidor",
+                    e
+
+                )
+
+            }
 
         }
 
@@ -157,7 +209,9 @@ class TrabajoViewModel(application: Application) : AndroidViewModel(application)
 
 
     fun obtenerTrabajos() {
+
         viewModelScope.launch {
+
             _trabajos.value = trabajoDao.obtenerTrabajos()
 
         }
@@ -166,7 +220,9 @@ class TrabajoViewModel(application: Application) : AndroidViewModel(application)
 
 
     fun obtenerTrabajosPorTrabajador(trabajador: String) {
+
         viewModelScope.launch {
+
             _trabajos.value = trabajoDao.obtenerTrabajosPorTrabajador(trabajador)
 
         }
@@ -174,13 +230,61 @@ class TrabajoViewModel(application: Application) : AndroidViewModel(application)
     }
 
 
+
     fun actualizarEstado(id: Int, estado: String) {
         viewModelScope.launch {
-            trabajoDao.actualizarEstado(id, estado)
-            obtenerTrabajos()
+            try {
+                val trabajo = trabajoDao.obtenerTrabajoPorId(id)
 
+                if (trabajo == null) {
+                    Log.e("ElectroTrack", "Trabajo no encontrado: $id")
+                    return@launch
+
+                }
+
+                val idServidor = trabajo.idServidor
+
+                if (idServidor != null) {
+                    val trabajoActualizado = trabajoApi.actualizarEstado(
+                        idServidor,
+                        estado
+
+                    )
+
+                    trabajoDao.actualizarEstado(
+                        id,
+                        trabajoActualizado.estado
+                    )
+
+                    Log.d(
+                        "ElectroTrack",
+                        "Estado actualizado en servidor: ${trabajoActualizado.estado}"
+                    )
+                } else {
+                    trabajoDao.actualizarEstado(id, estado)
+
+                    Log.d(
+                        "ElectroTrack",
+                        "Estado actualizado solo localmente"
+
+                    )
+                }
+
+                _trabajos.value =
+                    trabajoDao.obtenerTrabajosPorTrabajador("99.999.999-9")
+
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                Log.e(
+                    "ElectroTrack",
+                    "Error al actualizar estado",
+                    e
+
+                )
+            }
         }
-
     }
+
 
 }
