@@ -1,75 +1,124 @@
 # ElectroTrack
-## Integrantes del equipo
 
-- Fabian Dominguez Rojas
-- Damian Diaz
+**Aplicación móvil para la gestión de mantenimiento electromecánico**
+
+## Integrantes
+
+- Fabián Domínguez Rojas
+- Damián Díaz
 
 **Institución:** Duoc UC  
 **Asignatura:** DSY1105 — Desarrollo de Aplicaciones Móviles  
-**Caso:** Electromechanics Ingeniería SpA
+**Caso de estudio:** Electromechanics Ingeniería SpA
 
-## Descripción del proyecto
+## Descripción
 
-ElectroTrack es una aplicación móvil desarrollada en Android Studio con Kotlin y Jetpack Compose, orientada a apoyar la gestión de trabajos de mantenimiento electromecánico.
+ElectroTrack es una aplicación Android desarrollada en Kotlin y Jetpack Compose para apoyar la gestión de trabajos de mantenimiento electromecánico.
 
-La aplicación permite que los trabajadores registren su asistencia, consulten sus trabajos asignados y elaboren informes de mantenimiento. Los administradores pueden asignar trabajos, gestionar sus estados y revisar las asistencias e informes registrados.
+Permite registrar asistencias con ubicación GPS, administrar trabajos, consultar asignaciones y elaborar informes de mantenimiento. Incorpora almacenamiento local mediante Room y comunicación con microservicios REST desarrollados en Spring Boot.
 
-Este proyecto corresponde a un prototipo académico desarrollado para la asignatura DSY1105.
+Es un prototipo académico.
 
-## Tecnologías utilizadas
+## Tecnologías
 
-- Kotlin
-- Android Studio
-- Jetpack Compose
+- Kotlin y Jetpack Compose
 - Material Design 3
 - Arquitectura MVVM
 - Room Database
-- Navigation Compose
-- GPS y servicios de ubicación
+- Retrofit y Gson
 - Corrutinas y StateFlow
+- Navigation Compose
+- GPS y cámara de Android
+- Java 21 y Spring Boot
+- PostgreSQL
+- Maven
+- JUnit 5, Mockito y JaCoCo
 - Git y GitHub
-- Cámara de Android
 
 ## Funcionalidades
 
-### Rol Usuario
+### Trabajador
 
-- Inicio de sesión mediante credenciales de prueba.
-- Registro de entrada y salida con fecha, hora y ubicación GPS.
+- Inicio de sesión con credenciales de demostración.
+- Registro de entrada y salida con fecha, hora y coordenadas GPS.
 - Consulta de trabajos asignados.
-- Registro de informes de mantenimiento asociados a un número de trabajo.
-- Navegación entre pantallas.
+- Registro de informes de mantenimiento.
+- Captura opcional de fotografías como evidencia.
+- Consulta de información meteorológica mediante una API externa.
 
-### Rol Administrador
+### Administrador
 
-- Inicio de sesión mediante credenciales de prueba.
-- Revisión de registros de asistencia.
-- Asignación de trabajos a trabajadores.
-- Consulta y actualización del estado de los trabajos.
-- Revisión de informes de mantenimiento.
-- Navegación entre pantallas.
+- Inicio de sesión con credenciales de demostración.
+- Revisión de asistencias registradas.
+- Asignación y gestión de trabajos.
+- Actualización de estados.
+- Consulta de informes de mantenimiento.
 
-## Estados de los trabajos
+## Arquitectura
 
-Los trabajos pueden tener los siguientes estados:
+La aplicación utiliza el patrón MVVM:
 
-- Pendiente
-- En proceso
-- Finalizado
+- **Model:** entidades, DAO y base de datos Room.
+- **View:** interfaces desarrolladas con Jetpack Compose.
+- **ViewModel:** gestión del estado y operaciones de datos.
+- **Retrofit:** comunicación HTTP con servicios REST.
 
-## Persistencia de datos
+El backend está dividido en dos microservicios independientes:
 
-La aplicación utiliza Room Database para almacenar localmente:
+| Microservicio | Puerto | Función |
+|---|---|---|
+| asistencias-service | 8081 | Gestión de registros de asistencia |
+| trabajos-service | 8082 | Gestión de trabajos electromecánicos |
 
-- Registros de asistencia.
-- Trabajos asignados.
-- Informes de mantenimiento.
+Cada microservicio utiliza PostgreSQL para persistir su información.
 
-Los datos se conservan al cerrar y volver a abrir la aplicación, siempre que no se eliminen sus datos locales.
+## Persistencia y sincronización
 
-## Credenciales de prueba
+ElectroTrack combina almacenamiento local con comunicación hacia los microservicios.
 
-**Usuario**
+Room permite conservar datos en el dispositivo. Retrofit permite enviar y consultar información del backend, incluyendo la sincronización de asistencias y trabajos.
+
+La disponibilidad de la sincronización requiere que los microservicios estén ejecutándose y sean accesibles desde el dispositivo Android.
+
+## API externa
+
+La aplicación incorpora una consulta meteorológica mediante Retrofit, como integración con un servicio externo independiente de los microservicios propios.
+
+## Operaciones REST
+
+### Asistencias
+
+- `GET /api/asistencias`
+- `GET /api/asistencias/{id}`
+- `POST /api/asistencias`
+- `PUT /api/asistencias/{id}`
+- `DELETE /api/asistencias/{id}`
+
+### Trabajos
+
+- `GET /api/trabajos`
+- `GET /api/trabajos/trabajador/{trabajador}`
+- `POST /api/trabajos`
+- `PUT /api/trabajos/{id}`
+- `PATCH /api/trabajos/{id}/estado`
+- `DELETE /api/trabajos/{id}`
+
+## Pruebas automatizadas
+
+Se implementaron pruebas unitarias con JUnit 5 y Mockito para los servicios y controladores del backend.
+
+La cobertura se midió utilizando JaCoCo.
+
+| Microservicio | Cobertura de instrucciones |
+|---|---:|
+| Asistencias | 96 % |
+| Trabajos | 94 % |
+
+Las evidencias de cobertura se encuentran en el repositorio del backend.
+
+## Credenciales de demostración
+
+**Trabajador**
 
 - RUT: `99.999.999-9`
 - Contraseña: `42368`
@@ -79,52 +128,44 @@ Los datos se conservan al cerrar y volver a abrir la aplicación, siempre que no
 - RUT: `88.888.888-8`
 - Contraseña: `12345`
 
-Estas credenciales son utilizadas únicamente para demostrar el funcionamiento del prototipo.
+Estas credenciales corresponden exclusivamente al prototipo académico y no constituyen un sistema de autenticación de producción.
 
-## Requisitos para ejecutar
+## Instalación y ejecución
 
-- Android Studio.
-- SDK de Android instalado.
-- Emulador Android o dispositivo físico compatible.
-- Conexión a internet para descargar dependencias cuando sea necesario.
+1. Clonar el repositorio Android.
+2. Abrir el proyecto en Android Studio.
+3. Sincronizar las dependencias con Gradle.
+4. Configurar la dirección de red del backend cuando corresponda.
+5. Iniciar los microservicios y PostgreSQL para utilizar las funciones sincronizadas.
+6. Seleccionar un emulador o dispositivo Android.
+7. Ejecutar la aplicación o instalar el APK firmado.
 
-## Instrucciones de ejecución
+El APK de distribución se genera desde Android Studio mediante **Generate Signed App Bundle or APK**, seleccionando la variante **release**.
 
-1. Clonar el repositorio desde GitHub.
-2. Abrir la carpeta del proyecto en Android Studio.
-3. Esperar la sincronización de Gradle.
-4. Seleccionar un emulador o dispositivo compatible.
-5. Ejecutar la aplicación con el botón Run.
-6. Iniciar sesión utilizando las credenciales de prueba.
+Por seguridad, el archivo de firma `.jks` y sus contraseñas no se incluyen en el repositorio.
 
-## Arquitectura
+## Recursos nativos
 
-El proyecto utiliza el patrón MVVM (Model-View-ViewModel).
+- **GPS:** ubicación del trabajador al registrar asistencia.
+- **Cámara:** fotografías opcionales para informes.
+- **Almacenamiento local:** persistencia mediante Room.
+- **Animaciones:** elementos visuales desarrollados con Jetpack Compose.
 
-- **Model:** entidades y DAO de Room para el almacenamiento de información.
-- **View:** pantallas construidas con Jetpack Compose.
-- **ViewModel:** gestión de estados y comunicación entre las pantallas y los datos.
-- **Navigation:** definición de rutas y navegación entre pantallas.
+## Limitaciones
 
-## Recursos nativos y animaciones
+ElectroTrack es un prototipo académico. Utiliza usuarios de demostración y no implementa autenticación empresarial ni despliegue público de los microservicios.
 
-- GPS: registro de ubicación, fecha y hora de las asistencias.
-- Cámara: captura de fotografías como evidencia en los informes de mantenimiento.
-- Almacenamiento local: las fotografías se guardan en el almacenamiento privado de la aplicación y sus rutas se registran mediante Room.
-- Animación: aparición del título ElectroTrack mediante Jetpack Compose.
+La conexión con el backend depende de la configuración de red y de que los servicios estén disponibles.
 
-Las fotografías son opcionales y la cámara utiliza una captura de vista previa.
+## Repositorios
 
-## Alcance del prototipo
-
-ElectroTrack es una aplicación académica de demostración. La autenticación utiliza credenciales predefinidas, la identificación del trabajador de prueba es fija y los datos se almacenan localmente en el dispositivo.
-
-No incorpora un servidor remoto ni sincronización de datos entre diferentes dispositivos.
-
-## Repositorio
-
+**Aplicación Android:**  
 https://github.com/BIngvab/dsy1105-electromechanics
+
+**Backend:**  
+https://github.com/BIngvab/ElectroTrack-Backend
 
 ## Asignatura
 
-DSY1105 — Desarrollo de Aplicaciones Móviles.
+DSY1105 — Desarrollo de Aplicaciones Móviles  
+Duoc UC
