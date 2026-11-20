@@ -107,10 +107,23 @@ class TrabajoViewModel(application: Application) : AndroidViewModel(application)
 
                 }
 
-                _trabajos.value = trabajoDao.obtenerTrabajosPorTrabajador(
-                    "99.999.999-9"
 
-                )
+                val idsRemotos = trabajosRemotos.mapNotNull { it.id }.toSet()
+
+                val trabajosLocales = trabajoDao.obtenerTrabajos()
+
+
+                for (trabajoLocal in trabajosLocales) {
+                    val idServidor = trabajoLocal.idServidor
+
+                    if (idServidor != null && idServidor !in idsRemotos) {
+                        trabajoDao.eliminarTrabajoPorIdServidor(idServidor)
+
+                    }
+                }
+
+
+                _trabajos.value = trabajoDao.obtenerTrabajos()
 
                 Log.d(
                     "ElectroTrack",
@@ -270,8 +283,7 @@ class TrabajoViewModel(application: Application) : AndroidViewModel(application)
                     )
                 }
 
-                _trabajos.value =
-                    trabajoDao.obtenerTrabajosPorTrabajador("99.999.999-9")
+                _trabajos.value = trabajoDao.obtenerTrabajos()
 
             } catch (e: CancellationException) {
                 throw e

@@ -32,4 +32,8 @@ interface TrabajoDao {
 
     @Query("DELETE FROM trabajos WHERE id = :id")
     suspend fun eliminarTrabajo(id: Int)
+
+
+    @Query("DELETE FROM trabajos WHERE idServidor = :idServidor")
+    suspend fun eliminarTrabajoPorIdServidor(idServidor: Long)
 }
