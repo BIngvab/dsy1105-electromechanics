@@ -1,4 +1,5 @@
 package com.dominguezdiaz.electrotrack.ui.screen
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -14,12 +15,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
+
 @Composable
 fun MenuUsuario(
     onCerrarSesion: () -> Unit,
     onRegistrarAsistencia: () -> Unit,
     onMisTrabajos: () -> Unit,
-    onRegistrarInforme: () -> Unit
+    onRegistrarInforme: () -> Unit,
+    onConsultarClima: () -> Unit
 
 ) {
     Column(
@@ -30,6 +33,7 @@ fun MenuUsuario(
         horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
+
         Text(
             text = "ElectroTrack",
             style = MaterialTheme.typography.headlineLarge
@@ -39,13 +43,15 @@ fun MenuUsuario(
 
         Spacer(modifier = Modifier.height(8.dp))
 
+
         Text("Menu Principal")
+
 
         Spacer(modifier = Modifier.height(24.dp))
 
 
         Button(
-            onClick = {onRegistrarAsistencia()},
+            onClick = { onRegistrarAsistencia() },
             modifier = Modifier.fillMaxWidth()
 
         ) {
@@ -58,7 +64,7 @@ fun MenuUsuario(
 
 
         Button(
-            onClick = {onMisTrabajos()},
+            onClick = { onMisTrabajos() },
             modifier = Modifier.fillMaxWidth()
 
         ) {
@@ -71,7 +77,7 @@ fun MenuUsuario(
 
 
         Button(
-            onClick = {onRegistrarInforme()},
+            onClick = { onRegistrarInforme() },
             modifier = Modifier.fillMaxWidth()
 
         ) {
@@ -84,14 +90,25 @@ fun MenuUsuario(
 
 
         Button(
-            onClick = {onCerrarSesion()},
+            onClick = { onConsultarClima() },
+            modifier = Modifier.fillMaxWidth()
+
+        ) {
+            Text("Clima en terreno")
+
+        }
+
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+
+        Button(
+            onClick = { onCerrarSesion() },
             modifier = Modifier.fillMaxWidth()
 
         ) {
             Text("Cerrar sesión")
 
         }
-
-
     }
 }

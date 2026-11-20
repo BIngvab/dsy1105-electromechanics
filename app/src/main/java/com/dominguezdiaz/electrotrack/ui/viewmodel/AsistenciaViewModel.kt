@@ -62,6 +62,7 @@ class AsistenciaViewModel(application: Application) : AndroidViewModel(applicati
 
     ) {
         viewModelScope.launch {
+
             val asistencia = Asistencia(
                 tipo = tipo,
                 fechaHora = fechaHora,
@@ -70,13 +71,11 @@ class AsistenciaViewModel(application: Application) : AndroidViewModel(applicati
 
             )
 
-            // Guardamos primero la asistencia en Room
+
             asistenciaDao.registrarAsistencia(asistencia)
 
-            // Actualizamos la lista local
             _asistencias.value = asistenciaDao.obtenerAsistencias()
 
-            // Intentamos sincronizar los registros pendientes
             sincronizarAsistenciasPendientes()
 
         }
@@ -93,17 +92,24 @@ class AsistenciaViewModel(application: Application) : AndroidViewModel(applicati
 
     fun sincronizarAsistencias() {
         viewModelScope.launch {
+
             sincronizarAsistenciasPendientes()
+
+            descargarAsistenciasServidor()
 
         }
     }
 
 
     private suspend fun sincronizarAsistenciasPendientes() {
+
         val pendientes = asistenciaDao.obtenerAsistenciasPendientes()
 
+
         for (asistencia in pendientes) {
+
             try {
+
                 val asistenciaRemota = AsistenciaDto(
                     rutTrabajador = "99.999.999-9",
                     tipo = asistencia.tipo,
@@ -119,6 +125,7 @@ class AsistenciaViewModel(application: Application) : AndroidViewModel(applicati
 
                 asistenciaDao.marcarComoSincronizada(asistencia.uuid)
 
+
                 Log.d(
                     "ElectroTrack",
                     "Asistencia sincronizada: ${asistencia.uuid}"
@@ -129,6 +136,7 @@ class AsistenciaViewModel(application: Application) : AndroidViewModel(applicati
                 throw e
 
             } catch (e: Exception) {
+
                 Log.e(
                     "ElectroTrack",
                     "No se pudo sincronizar: ${asistencia.uuid}",
@@ -137,7 +145,65 @@ class AsistenciaViewModel(application: Application) : AndroidViewModel(applicati
                 )
             }
         }
-
         _asistencias.value = asistenciaDao.obtenerAsistencias()
+    }
+
+
+    private suspend fun descargarAsistenciasServidor() {
+
+        try {
+
+            val remotas = asistenciaApi.listarAsistencias()
+
+
+            for (remota in remotas) {
+
+                if (remota.uuid.isBlank()) {
+                    continue
+
+                }
+
+
+                val existente = asistenciaDao.obtenerAsistenciaPorUuid(remota.uuid)
+
+
+                val asistenciaLocal = Asistencia(
+                    id = existente?.id ?: 0,
+                    tipo = remota.tipo,
+                    fechaHora = remota.fechaHora,
+                    latitud = remota.latitud,
+                    longitud = remota.longitud,
+                    uuid = remota.uuid,
+                    sincronizada = true
+
+                )
+
+
+                asistenciaDao.registrarAsistencia(asistenciaLocal)
+
+            }
+
+
+            _asistencias.value = asistenciaDao.obtenerAsistencias()
+
+
+            Log.d(
+                "ElectroTrack",
+                "Asistencias descargadas del servidor"
+
+            )
+
+        } catch (e: CancellationException) {
+            throw e
+
+        } catch (e: Exception) {
+
+            Log.e(
+                "ElectroTrack",
+                "No se pudieron descargar las asistencias",
+                e
+
+            )
+        }
     }
 }

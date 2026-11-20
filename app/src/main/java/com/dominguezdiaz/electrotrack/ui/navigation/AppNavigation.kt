@@ -1,8 +1,10 @@
 package com.dominguezdiaz.electrotrack.ui.navigation
+
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
+
 import com.dominguezdiaz.electrotrack.ui.screen.InicioSesion
 import com.dominguezdiaz.electrotrack.ui.screen.MenuUsuario
 import com.dominguezdiaz.electrotrack.ui.screen.MenuAdministrador
@@ -13,9 +15,11 @@ import com.dominguezdiaz.electrotrack.ui.screen.MisTrabajos
 import com.dominguezdiaz.electrotrack.ui.screen.GestionarTrabajos
 import com.dominguezdiaz.electrotrack.ui.screen.RegistrarInforme
 import com.dominguezdiaz.electrotrack.ui.screen.RevisarInformes
+import com.dominguezdiaz.electrotrack.ui.screen.ConsultarClima
 
 
 object Routes {
+
     const val LOGIN = "login"
     const val USUARIO = "usuario"
     const val ADMINISTRADOR = "administrador"
@@ -26,22 +30,32 @@ object Routes {
     const val GESTIONAR_TRABAJOS = "gestionar_trabajos"
     const val REGISTRAR_INFORME = "registrar_informe"
     const val REVISAR_INFORMES = "revisar_informes"
+    const val CONSULTAR_CLIMA = "consultar_clima"
 
 }
 
+
 @Composable
 fun AppNavigation() {
+
     val navController = rememberNavController()
+
+
     NavHost(
         navController = navController,
         startDestination = Routes.LOGIN
 
     ) {
+
         composable(Routes.LOGIN) {
+
             InicioSesion(
                 onLoginSuccess = { rol ->
+
                     if (rol == "USUARIO") {
+
                         navController.navigate(Routes.USUARIO) {
+
                             popUpTo(Routes.LOGIN) {
                                 inclusive = true
 
@@ -50,7 +64,9 @@ fun AppNavigation() {
                         }
 
                     } else if (rol == "ADMINISTRADOR") {
+
                         navController.navigate(Routes.ADMINISTRADOR) {
+
                             popUpTo(Routes.LOGIN) {
                                 inclusive = true
 
@@ -68,6 +84,7 @@ fun AppNavigation() {
 
 
         composable(Routes.ASISTENCIA) {
+
             RegistrarAsistencia(
                 onVolver = {
                     navController.popBackStack()
@@ -80,6 +97,7 @@ fun AppNavigation() {
 
 
         composable(Routes.REVISAR_ASISTENCIAS) {
+
             RevisarAsistencias(
                 onVolver = {
                     navController.popBackStack()
@@ -92,13 +110,17 @@ fun AppNavigation() {
 
 
         composable(Routes.USUARIO) {
+
             MenuUsuario(
                 onCerrarSesion = {
+
                     navController.navigate(Routes.LOGIN) {
+
                         popUpTo(Routes.USUARIO) {
                             inclusive = true
 
                         }
+
                         launchSingleTop = true
 
                     }
@@ -115,6 +137,10 @@ fun AppNavigation() {
                 onRegistrarInforme = {
                     navController.navigate(Routes.REGISTRAR_INFORME)
 
+                },
+                onConsultarClima = {
+                    navController.navigate(Routes.CONSULTAR_CLIMA)
+
                 }
 
             )
@@ -123,13 +149,17 @@ fun AppNavigation() {
 
 
         composable(Routes.ADMINISTRADOR) {
+
             MenuAdministrador(
                 onCerrarSesion = {
+
                     navController.navigate(Routes.LOGIN) {
+
                         popUpTo(Routes.ADMINISTRADOR) {
                             inclusive = true
 
                         }
+
                         launchSingleTop = true
 
                     }
@@ -153,21 +183,25 @@ fun AppNavigation() {
                 }
 
             )
+
         }
 
 
-
         composable(Routes.ASIGNAR_TRABAJO) {
+
             AsignarTrabajo(
                 onVolver = {
                     navController.popBackStack()
 
                 }
+
             )
+
         }
 
 
         composable(Routes.MIS_TRABAJOS) {
+
             MisTrabajos(
                 onVolver = {
                     navController.popBackStack()
@@ -180,6 +214,7 @@ fun AppNavigation() {
 
 
         composable(Routes.GESTIONAR_TRABAJOS) {
+
             GestionarTrabajos(
                 onVolver = {
                     navController.popBackStack()
@@ -191,8 +226,8 @@ fun AppNavigation() {
         }
 
 
-
         composable(Routes.REGISTRAR_INFORME) {
+
             RegistrarInforme(
                 onVolver = {
                     navController.popBackStack()
@@ -205,7 +240,21 @@ fun AppNavigation() {
 
 
         composable(Routes.REVISAR_INFORMES) {
+
             RevisarInformes(
+                onVolver = {
+                    navController.popBackStack()
+
+                }
+
+            )
+
+        }
+
+
+        composable(Routes.CONSULTAR_CLIMA) {
+
+            ConsultarClima(
                 onVolver = {
                     navController.popBackStack()
 

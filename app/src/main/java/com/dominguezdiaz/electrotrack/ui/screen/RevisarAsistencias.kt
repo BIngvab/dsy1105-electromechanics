@@ -31,7 +31,7 @@ fun RevisarAsistencias(
     val asistencias by asistenciaViewModel.asistencias.collectAsState()
 
     LaunchedEffect(Unit) {
-        asistenciaViewModel.obtenerAsistencias()
+        asistenciaViewModel.sincronizarAsistencias()
 
     }
 
