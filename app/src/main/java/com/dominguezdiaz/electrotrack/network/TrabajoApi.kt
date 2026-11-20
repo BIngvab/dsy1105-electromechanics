@@ -4,6 +4,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 import retrofit2.http.DELETE
@@ -28,6 +29,14 @@ interface TrabajoApi {
     ): TrabajoDto
 
 
+    @PUT("api/trabajos/{id}")
+    suspend fun actualizarTrabajo(
+        @Path("id") id: Long,
+        @Body trabajo: TrabajoDto
+
+    ): TrabajoDto
+
+
     @PATCH("api/trabajos/{id}/estado")
     suspend fun actualizarEstado(
         @Path("id") id: Long,
@@ -39,6 +48,7 @@ interface TrabajoApi {
     @DELETE("api/trabajos/{id}")
     suspend fun eliminarTrabajo(
         @Path("id") id: Long
+
     )
 
 }
