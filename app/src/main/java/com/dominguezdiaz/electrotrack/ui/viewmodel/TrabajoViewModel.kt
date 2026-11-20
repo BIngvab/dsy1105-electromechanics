@@ -287,4 +287,50 @@ class TrabajoViewModel(application: Application) : AndroidViewModel(application)
     }
 
 
+    fun eliminarTrabajo(id: Int) {
+        viewModelScope.launch {
+            try {
+                val trabajo = trabajoDao.obtenerTrabajoPorId(id)
+
+
+                if (trabajo == null) {
+                    Log.e("ElectroTrack", "Trabajo no encontrado: $id")
+                    return@launch
+
+                }
+
+
+                val idServidor = trabajo.idServidor
+
+
+                if (idServidor != null) {
+                    trabajoApi.eliminarTrabajo(idServidor)
+
+                }
+
+
+                trabajoDao.eliminarTrabajo(id)
+
+                _trabajos.value = trabajoDao.obtenerTrabajos()
+
+
+                Log.d(
+                    "ElectroTrack",
+                    "Trabajo eliminado correctamente: $id"
+
+                )
+
+            } catch (e: CancellationException) {
+                throw e
+
+            } catch (e: Exception) {
+                Log.e(
+                    "ElectroTrack",
+                    "Error al eliminar trabajo",
+                    e
+
+                )
+            }
+        }
+    }
 }

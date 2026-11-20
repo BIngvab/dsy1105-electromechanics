@@ -28,4 +28,8 @@ interface TrabajoDao {
 
     @Update
     suspend fun actualizarTrabajo(trabajo: Trabajo)
+
+
+    @Query("DELETE FROM trabajos WHERE id = :id")
+    suspend fun eliminarTrabajo(id: Int)
 }

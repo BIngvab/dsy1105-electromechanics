@@ -33,10 +33,8 @@ fun GestionarTrabajos(
 
 
     LaunchedEffect(Unit) {
-        trabajoViewModel.obtenerTrabajos()
-
+        trabajoViewModel.sincronizarTrabajos()
     }
-
 
     Column(
         modifier = Modifier
@@ -120,8 +118,8 @@ fun GestionarTrabajos(
                                 trabajoViewModel.actualizarEstado(
                                     trabajo.id,
                                     "Finalizado"
-                                )
 
+                                )
                             },
                             modifier = Modifier.fillMaxWidth()
 
@@ -130,15 +128,25 @@ fun GestionarTrabajos(
 
                         }
 
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+
+                        Button(
+                            onClick = {
+                                trabajoViewModel.eliminarTrabajo(trabajo.id)
+
+                            },
+                            modifier = Modifier.fillMaxWidth()
+
+                        ) {
+                            Text("Eliminar trabajo")
+
+                        }
                     }
-
                 }
-
             }
-
         }
-
-
         Spacer(modifier = Modifier.height(16.dp))
 
 
@@ -150,7 +158,5 @@ fun GestionarTrabajos(
             Text("Volver al menú")
 
         }
-
     }
-
 }
